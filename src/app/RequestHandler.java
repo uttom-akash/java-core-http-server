@@ -122,19 +122,46 @@ public class RequestHandler implements Runnable{
         StringBuffer sb=new StringBuffer();
         String line =null;
         Boolean flag=false;
+        Boolean hasNewBodyLine = true;
         
-        while((line=reader.readLine())!=null){
-            if(line.contains("{"))
-                flag=true;
-            else if("\"end\":\"end\"".equals(line))
-                break;
-                
-            if(flag)
+//        while((line=reader.readLine())!=null){
+//            if(line.contains("{"))
+//                flag=true;
+//            else if("\"end\":\"end\"".equals(line))
+//                break;
+//
+//            if(flag)
+//                sb.append(line);
+//
+//        }
+
+        do{
+            line = bufferedReader.readLine();
+
+
+
+            if(line.contains("{")){
+                flag = true;
+            }
+
+            if(flag && !line.contains(",") && !line.contains("{")){
+                System.out.println("line: "+line);
+                hasNewBodyLine = false;
+            }
+
+            if(flag){
                 sb.append(line);
-                          
-        }
-        int len=sb.length();
-        sb.replace(len-1, len,"}");
+            }
+
+
+
+        }while (hasNewBodyLine);
+
+//        int len=sb.length();
+//        sb.replace(len-1, len,"}");
+        
+        sb.append("}");
+
         return sb.toString();   
     }
     
